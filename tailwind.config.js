@@ -4,7 +4,15 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        twitter: '#00ADED',
+        bybit: '#19181C',
+        bybitBg: '#100f13',
+        kuRed: "#DB716b",
+        kuRedDiv: "#403040",
+      }
+    }, 
   },
   plugins: [],
 }
