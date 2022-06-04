@@ -1,10 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
+import DropdownMenuRow from './DropdownMenuRow'
 function Dropdown({ url }) {
 
   return (
 		<div className="group relative">
-			<div className='bg-gray-800 flex mt-2 mx-2 py-2 pl-5
+			<div className='relative bg-gray-800 flex m-2 py-2 pl-5 mb-0
 				space-x-2 rounded-xl text-justify 
 				hover:bg-gray-400 cursor-pointer'
 			>
@@ -14,8 +15,10 @@ function Dropdown({ url }) {
 					<p className='text-gray-400 group-hover:text-gray-600'>Ethereum</p>
 				</div>
 			</div>
-			<div className='rounded-xl bg-slate-400 p-2 mx-2'>
-				div
+			<div className='hidden group-hover:block absolute rounded-md bg-slate-400 p-2 mx-2'>
+				<DropdownMenuRow />
+				<DropdownMenuRow />
+				<DropdownMenuRow />
 			
 			</div>
 		</div>
