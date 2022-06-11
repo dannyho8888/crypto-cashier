@@ -2,19 +2,57 @@ import React, {useState, useEffect} from 'react'
 import Image from 'next/image'
 import NetworkBtn from './NetworkBtn'
 import DecimalDigits from './DecimalDigits'
-import Price from './Price'
-import axios from 'axios'
 import Dropdown from './Dropdown'
 
+function Feed() {
+  const [name, setName] = useState('')
+  const [symbol, setSymbol] = useState('');
+  const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
+  const [price, setPrice] = useState(0);
+  const [priceChange, setPriceChagne] = useState(0);
+  let index: number;
 
-function Feed({ data }) {
-  const url: string = data[1].image;
-  const price: number = data[1].current_price;
-  const symbol: string = data[1].symbol.toUpperCase();
-  const priceChanged: number = data[1].price_change_percentage_24h.toFixed(2);
+  const [crypto, setCrypto] = useState('eth');
+
+  const findCrpyto = (sym: string, coins) => {
+    for (let i = 0; i < coins.length; i++) {
+      if (coins[i].symbol == sym) 
+        return i;
+    }
+    
+    return 0;
+  }
+
+  // get coin information when first rendering the app
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+      const data = await res.json();
+      index = findCrpyto(crypto, data)
+      setImage(data[index].image);
+      setName(data[index].name);
+      setSymbol(data[index].symbol.toUpperCase());
+      setPrice(data[index].current_price);
+      setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+    }
+    fetchData();
+  })
+  
+  // update the coin information every 10 seconds
+  useEffect(() => {
+    setInterval(async () => {
+      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+      const data = await res.json();
+      setPrice(data[index].current_price);
+      setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+    }, 10000);
+  })
+
+  
+
   return (
     <div className="col-span-10 lg:col-span-8">
-        <Dropdown url={url}/>
+        <Dropdown url={image} symbol={symbol} name={name}/>
         <div className="flex mt-2 space-x-3 px-2 py-1 items-center text-xs">
           <NetworkBtn title="BSC(BEP20)"/>
           <NetworkBtn title="ERC20"/>
@@ -32,7 +70,7 @@ function Feed({ data }) {
           <p className="font-bold">{symbol}</p>
           <p className="text-xs text-gray-400">/USDT</p>
           <p className='ml-auto'>${price}</p>
-          <div className='bg-kuRedDiv text-kuRed mx-3 p-1 rounded-xl'>{priceChanged}%</div>
+          <div className='bg-kuRedDiv text-kuRed mx-3 p-1 rounded-xl'>{priceChange}%</div>
         </div>
         
         <div className='m-2 grid grid-cols-3 grid-flow-row gap-x-5 gap-y-3'>

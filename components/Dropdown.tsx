@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import DropdownMenuRow from './DropdownMenuRow'
-function Dropdown({ url }) {
+function Dropdown({ url, symbol, name }) {
 
   return (
 		<div className="group relative">
@@ -11,8 +11,8 @@ function Dropdown({ url }) {
 			>
 				<Image className='bg-white rounded-full' src={url} width={30} height={30} />
 				<div className='flex space-x-2 items-baseline'>
-					<p className='text-xl text-gray-100 font-bold group-hover:text-gray-800'>ETH</p>
-					<p className='text-gray-400 group-hover:text-gray-600'>Ethereum</p>
+					<p className='text-xl text-gray-100 font-bold group-hover:text-gray-800'>{symbol}</p>
+					<p className='text-gray-400 group-hover:text-gray-600'>{name}</p>
 				</div>
 			</div>
 			<div className='hidden group-hover:block absolute rounded-md bg-slate-400 p-2 mx-2'>
