@@ -12,7 +12,7 @@ function Feed() {
   const [priceChange, setPriceChagne] = useState(0);
   
 
-  const [crypto, setCrypto] = useState('eth');
+  const [crypto, setCrypto] = useState('btc');
   let index: number;
   const findCrpyto = (sym: string, coins) => {
     for (let i = 0; i < coins.length; i++) {
