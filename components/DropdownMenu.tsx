@@ -1,8 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import DropdownMenuRow from './DropdownMenuRow'
-function Dropdown({ url, symbol, name }) {
-
+function DropdownMenu({ url, symbol, name }) {
   return (
 		<div className="group relative">
 			<div className='relative bg-gray-800 flex m-2 py-2 pl-5 mb-0
@@ -19,13 +18,9 @@ function Dropdown({ url, symbol, name }) {
 				<DropdownMenuRow />
 				<DropdownMenuRow />
 				<DropdownMenuRow />
-			
 			</div>
 		</div>
-    
-		
-		
   )
 }
 
-export default Dropdown
+export default DropdownMenu

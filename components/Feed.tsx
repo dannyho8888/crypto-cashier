@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Image from 'next/image'
 import NetworkBtn from './NetworkBtn'
 import DecimalDigits from './DecimalDigits'
-import Dropdown from './Dropdown'
+import DropdownMenu from './DropdownMenu'
 
 function Feed() {
   const [name, setName] = useState('')
@@ -22,18 +22,20 @@ function Feed() {
     return 0;
   }
 
+
+  const fetchData = async () => {
+    const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+    const data = await res.json();
+    index = findCrpyto(crypto, data)
+    setImage(data[index].image);
+    setName(data[index].name);
+    setSymbol(data[index].symbol.toUpperCase());
+    setPrice(data[index].current_price);
+    setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+  }
+
   // get coin information when first rendering the app
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
-      const data = await res.json();
-      index = findCrpyto(crypto, data)
-      setImage(data[index].image);
-      setName(data[index].name);
-      setSymbol(data[index].symbol.toUpperCase());
-      setPrice(data[index].current_price);
-      setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
-    }
     fetchData();
   })
   
@@ -44,14 +46,13 @@ function Feed() {
       const data = await res.json();
       setPrice(data[index].current_price);
       setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
-    }, 10000);
+      console.log('updated!!')
+    }, 15000);
   })
-
-  
 
   return (
     <div className="col-span-10 lg:col-span-8">
-        <Dropdown url={image} symbol={symbol} name={name}/>
+        <DropdownMenu url={image} symbol={symbol} name={name}/>
         <div className="flex mt-2 space-x-3 px-2 py-1 items-center text-xs">
           <NetworkBtn title="BSC(BEP20)"/>
           <NetworkBtn title="ERC20"/>
@@ -89,5 +90,4 @@ function Feed() {
     </div>
   )
 }
-
 export default Feed
