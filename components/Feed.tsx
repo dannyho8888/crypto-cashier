@@ -10,16 +10,15 @@ function Feed() {
   const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChagne] = useState(0);
-  let index: number;
+  
 
   const [crypto, setCrypto] = useState('eth');
-
+  let index: number;
   const findCrpyto = (sym: string, coins) => {
     for (let i = 0; i < coins.length; i++) {
       if (coins[i].symbol == sym) 
         return i;
     }
-    
     return 0;
   }
 
