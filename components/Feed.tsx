@@ -23,18 +23,22 @@ function Feed() {
   }
 
   const fetchData = async () => {
-    const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
-    const data = await res.json();
-    index = findCrpyto(crypto, data)
-    console.log("first fetch!")
-    setCoins(data);
-    setImage(data[index].image);
-    setName(data[index].name);
-    setSymbol(data[index].symbol.toUpperCase());
-    setPrice(data[index].current_price);
-    setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+      const data = await res.json();
+      index = findCrpyto(crypto, data)
+      console.log("first fetch!")
+      setCoins(data);
+      setImage(data[index].image);
+      setName(data[index].name);
+      setSymbol(data[index].symbol.toUpperCase());
+      setPrice(data[index].current_price);
+      setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+    } catch (e) {
+      console.log("Error when fetching data")
+    }
   }
-  
+  console.log("testinng")
   // get coin information when first rendering the app
   useEffect(() => {
     fetchData();
@@ -49,8 +53,8 @@ function Feed() {
         setPrice(data[index].current_price);
         setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
         console.log('fetch every 15s!!')
-      }catch(e) {
-        console.log("TypeError")
+      }catch (e) {
+        console.log("Error when fetching data")
       }
     }, 15000);
   }, [])
