@@ -15,8 +15,9 @@ function Menu() {
   const { data: session } = useSession();
   console.log(session);
 
-  function uploadUrl(url:string): void{ 
+  function uploadUrl(url:string){ 
     window.location.assign(url);
+    return 0;
   }
   return (
     <div className='flex flex-col col-span-2 items-center px-4 md:items-start'>

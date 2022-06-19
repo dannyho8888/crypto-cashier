@@ -5,13 +5,13 @@ import DecimalDigits from './DecimalDigits'
 import DropdownMenu from './DropdownMenu'
 
 function Feed() {
+  const [coins, setCoins] = useState([]);
   const [name, setName] = useState('')
   const [symbol, setSymbol] = useState('');
   const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChagne] = useState(0);
   
-
   const [crypto, setCrypto] = useState('eth');
   let index: number;
   const findCrpyto = (sym: string, coins) => {
@@ -22,37 +22,42 @@ function Feed() {
     return 0;
   }
 
-
   const fetchData = async () => {
     const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
     const data = await res.json();
     index = findCrpyto(crypto, data)
+    console.log("first fetch!")
+    setCoins(data);
     setImage(data[index].image);
     setName(data[index].name);
     setSymbol(data[index].symbol.toUpperCase());
     setPrice(data[index].current_price);
     setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
   }
-
+  
   // get coin information when first rendering the app
   useEffect(() => {
     fetchData();
-  })
-  
-  // update the coin information every 10 seconds
+  }, [])
+ 
+  // update the coin information every 15 seconds
   useEffect(() => {
     setInterval(async () => {
-      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
-      const data = await res.json();
-      setPrice(data[index].current_price);
-      setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
-      console.log('updated!!')
+      try { 
+        const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+        const data = await res.json();
+        setPrice(data[index].current_price);
+        setPriceChagne(data[index].price_change_percentage_24h.toFixed(2));
+        console.log('fetch every 15s!!')
+      }catch(e) {
+        console.log("TypeError")
+      }
     }, 15000);
-  })
+  }, [])
 
   return (
     <div className="col-span-10 lg:col-span-8">
-        <DropdownMenu url={image} symbol={symbol} name={name}/>
+        <DropdownMenu coins={coins} url={image} symbol={symbol} name={name}/>
         <div className="flex mt-2 space-x-3 px-2 py-1 items-center text-xs">
           <NetworkBtn title="BSC(BEP20)"/>
           <NetworkBtn title="ERC20"/>
