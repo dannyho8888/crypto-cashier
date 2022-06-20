@@ -1,16 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
 function DropdownMenuRow({coin}) {
+  const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
   
 
+  useEffect(() => {
+    if (coin) {
+      setImage(coin?.image);
+    }
+  }, [coin])
   
   return (
     <div className="flex space-x-2 m-2">
-      <Image className='bg-white rounded-full' src={coin.image} width={30} height={30} /> 
+      <Image className='bg-white rounded-full' src={image} width={30} height={30} /> 
 				<div className='flex space-x-2 items-baseline'>
-					<p className='text-xl text-white font-bold group-hover:text-gray-800'>{coin.symbol}</p>
-					<p className='text-gray-400 group-hover:text-gray-600'>{coin.name}</p>
+					<p className='text-xl text-white font-bold'>{coin?.symbol.toUpperCase()}</p>
+					<p className='text-gray-400'>{coin?.name}</p>
 				</div>
     </div>
   )
