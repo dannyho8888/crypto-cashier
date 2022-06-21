@@ -14,13 +14,13 @@ function Feed() {
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChange] = useState(0);
 
-
-  let index = 0;
-  const [crypto, setCrypto] = useState('eth');
+  const [index, setIndex] = useState(0);
+  // let index = 0;
+  const [crypto, setCrypto] = useState('btc');
   const findCrpyto = (sym: string, coins) => {
-    for (let i = 0; i < coins.length; i++) {
-      if (coins[i].symbol == sym) 
-        return i;
+    for (let i = 0; i < coins?.length; i++) {
+      if (coins[i]?.symbol == sym) 
+        setIndex(i);
     }
     return 0;
   }
@@ -29,14 +29,12 @@ function Feed() {
     try {
       const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
       const data = await res.json();
-      index = findCrpyto(crypto, data);
-      console.log("first fetch!");
       setCoins(data);
-      setImage(data[index]?.image);
-      setName(data[index]?.name);
-      setSymbol(data[index]?.symbol.toUpperCase());
-      setPrice(data[index]?.current_price);
-      setPriceChange(data[index]?.price_change_percentage_24h.toFixed(2));
+      setImage(data[index].image);
+      setName(data[index].name);
+      setSymbol(data[index].symbol.toUpperCase());
+      setPrice(data[index].current_price);
+      setPriceChange(data[index].price_change_percentage_24h.toFixed(2));
     } catch (e) {
       console.log("Error when fetching data")
     }
@@ -45,7 +43,8 @@ function Feed() {
   // get coin information when first rendering the app
   useEffect(() => {
     fetchData();
-  }, [])
+    console.log("testing index:" + index);
+  }, [index])
 
   // update the coin information every 15 seconds
   useEffect(() => {
@@ -64,7 +63,7 @@ function Feed() {
 
   return (
     <div className="col-span-10 lg:col-span-8">
-        <DropdownMenu coins={coins} image={image} symbol={symbol} name={name}/>
+        <DropdownMenu changeIndex={i => setIndex(i)} coins={coins} image={image} symbol={symbol} name={name}/>
         <div className="flex mt-2 space-x-3 px-2 py-1 items-center text-xs">
           <NetworkBtn title="BSC(BEP20)"/>
           <NetworkBtn title="ERC20"/>
