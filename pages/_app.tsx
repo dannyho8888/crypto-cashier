@@ -7,9 +7,7 @@ function MyApp({ Component, pageProps: {session, ...pageProps }} : any) {
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
-    
   )
-  
 }
 
 export default MyApp

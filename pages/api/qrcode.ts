@@ -6,7 +6,8 @@ export default async function handler(req, res) {
 
     const data = req.query;
 
-    const response = await db.collection('users').update({ QRcode: data });
+    // const response = await db.collection('users').update({ QRcode: data });
+    const response = await db.collection('QRcode').insertOne(data);
     
     res.json(response);
 }

@@ -3,8 +3,7 @@ import DropdownMenu from '../components/DropdownMenu'
 import Menu from '../components/Menu'
 import clientPromise from '../lib/mongodb'
 
-function upload(users) {
-  console.log(users[2])
+function upload({users}) {
   const [coins, setCoins] = useState([]);
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
@@ -36,8 +35,9 @@ function upload(users) {
   }, [index])
 
   const addQRcode = async (user) => {
-    const data = await fetch(`http://localhost:3000/api/qrcode?user_id=${user.name}&guest=Ado`)
+    const data = await fetch(`http://localhost:3000/api/qrcode?user_id=${user.name}&guest=Anna`)
     const res = await data.json()
+    console.log("hello")
     console.log(res);
   }
 
@@ -58,6 +58,15 @@ function upload(users) {
             title="Password should be digits (0 to 9) or alphabets (a to z)."
             required />
           </form>
+
+          <div className="flex flex-row flex-wrap space-x-2">
+            {users && users.map(user =>(
+              <div>
+                <div onClick={() => { console.log("button clicked");}} className="cursor-pointer m-2 rounded-full p-1 bg-slate-500">{user._id}</div>
+              </div>
+                
+            ))}
+          </div>
           
 
 
@@ -73,10 +82,10 @@ export async function getServerSideProps (context) {
   const client = await clientPromise
   const db = client.db('test')
   db.collection('users').updateOne({ name: "Danny Ho"}, { $set: { QRcode: "www.im-url.com"}});
-  let data = await db.collection('users').find({}).limit(10).toArray();
-  data = JSON.parse(JSON.stringify(data));
-  //console.log(data);
+  const data = await db.collection('users').find({}).limit(10).toArray();
+  const users = JSON.parse(JSON.stringify(data));
+
   return {
-    props: { users : data },
+    props: { users : users },
   }
 }
