@@ -6,6 +6,7 @@ function DropdownMenu(props) {
 	useEffect(
 		() => props.changeIndex(index)
 	, [index])
+	
   return (
 		<div className="group relative">
 			<div className='bg-gray-800 flex m-2 py-2 pl-5 mb-0

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import MenuRow from './MenuRow'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { getSession, useSession, signIn, signOut } from "next-auth/react"
 import Link from 'next/link';
 import { UserIcon, 
          HomeIcon, 
@@ -12,8 +12,7 @@ import { UserIcon,
 
 
 function Menu() {
-  const { data: session } = useSession();
-  console.log(session);
+  const { data: session, status } = useSession();
 
   function uploadUrl(url:string){ 
     window.location.assign(url);
@@ -21,7 +20,6 @@ function Menu() {
   }
   return (
     <div className='flex flex-col col-span-2 items-center px-4 md:items-start'>
-      
       <MenuRow onClick={() => uploadUrl("http://localhost:3000")} Icon={HomeIcon} title='Home'/>
       <MenuRow onClick={() => uploadUrl("http://localhost:3000/upload")} Icon={UploadIcon} title='Upload'/>
       <MenuRow Icon={AdjustmentsIcon} title='Adjust' />

@@ -3,8 +3,6 @@ import Image from 'next/image'
 import NetworkBtn from './NetworkBtn'
 import DecimalDigits from './DecimalDigits'
 import DropdownMenu from './DropdownMenu'
-import axios from 'axios'
-
 
 function Feed() {
   const [coins, setCoins] = useState([]);
@@ -14,16 +12,7 @@ function Feed() {
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChange] = useState(0);
 
-  const [index, setIndex] = useState(0);
-  // let index = 0;
-  const [crypto, setCrypto] = useState('btc');
-  const findCrpyto = (sym: string, coins) => {
-    for (let i = 0; i < coins?.length; i++) {
-      if (coins[i]?.symbol == sym) 
-        setIndex(i);
-    }
-    return 0;
-  }
+  const [index, setIndex] = useState(0);    // 0 = bitcoin
 
   const fetchData = async () => {
     try {
