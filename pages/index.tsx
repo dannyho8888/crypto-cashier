@@ -4,9 +4,13 @@ import clientPromise from '../lib/mongodb'
 import Head from 'next/head';
 import Feed from '../components/Feed';
 import Menu from '../components/Menu';
+import { useSession } from "next-auth/react"
+
 
 const Home: NextPage = (users) => {
+  const { data: session, status } = useSession();
   // console.log(users)
+  
   return (
     <div className="mx-auto bg-slate-100">
       <Head>
@@ -15,7 +19,7 @@ const Home: NextPage = (users) => {
       </Head>
 
       <main className="grid grid-cols-12 ">
-        <Menu />
+        <Menu session={session}/>
         <Feed />
       </main>
     </div>

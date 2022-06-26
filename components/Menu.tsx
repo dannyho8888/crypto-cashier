@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuRow from './MenuRow'
-import { getSession, useSession, signIn, signOut } from "next-auth/react"
+import { signIn, signOut } from "next-auth/react"
 import Link from 'next/link';
 import { UserIcon, 
          HomeIcon, 
@@ -11,22 +11,24 @@ import { UserIcon,
 } from '@heroicons/react/outline';
 
 
-function Menu() {
-  const { data: session, status } = useSession();
-
+function Menu(props) {
+  const userEmail = props.session?.user.email; 
+  
   function uploadUrl(url:string){ 
     window.location.assign(url);
     return 0;
   }
+
   return (
     <div className='flex flex-col col-span-2 items-center px-4 md:items-start'>
+      <p>email: {userEmail}</p>
       <MenuRow onClick={() => uploadUrl("http://localhost:3000")} Icon={HomeIcon} title='Home'/>
       <MenuRow onClick={() => uploadUrl("http://localhost:3000/upload")} Icon={UploadIcon} title='Upload'/>
       <MenuRow Icon={AdjustmentsIcon} title='Adjust' />
       <MenuRow 
-        onClick={ session ? signOut : signIn } 
-        Icon={session ? LogoutIcon : UserIcon }
-        title={session ? 'SignOut' : 'Sign In'}
+        onClick={ props.session ? signOut : signIn } 
+        Icon={ props.session ? LogoutIcon : UserIcon }
+        title={ props.session ? 'SignOut' : 'Sign In' }
       />
     </div>
   )

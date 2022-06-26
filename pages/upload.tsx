@@ -11,7 +11,7 @@ function upload({users}) {
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChange] = useState(0);
 
-  const [index, setIndex] = useState(0);    // 0 = bitcoin
+  const [index, setIndex] = useState(0);    // coins[0] = bitcoin
 
   const fetchData = async () => {
     try {
