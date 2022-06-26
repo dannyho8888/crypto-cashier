@@ -2,17 +2,20 @@ import React, {useState, useEffect} from 'react'
 import DropdownMenu from '../components/DropdownMenu'
 import Menu from '../components/Menu'
 import clientPromise from '../lib/mongodb'
+import { useSession } from "next-auth/react"
 
 function upload({users}) {
+  const { data: session } = useSession();
+  const userName = session?.user.name;
+
+  const [input, setInput] = useState('');
+
   const [coins, setCoins] = useState([]);
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
-  const [price, setPrice] = useState(0);
-  const [priceChange, setPriceChange] = useState(0);
 
   const [index, setIndex] = useState(0);    // coins[0] = bitcoin
-
   const fetchData = async () => {
     try {
       const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
@@ -21,8 +24,6 @@ function upload({users}) {
       setImage(data[index].image);
       setName(data[index].name);
       setSymbol(data[index].symbol.toUpperCase());
-      setPrice(data[index].current_price);
-      setPriceChange(data[index].price_change_percentage_24h.toFixed(2));
     } catch (e) {
       console.log("Error when fetching data")
     }
@@ -35,9 +36,8 @@ function upload({users}) {
   }, [index])
 
   const addQRcode = async (user) => {
-    const data = await fetch(`http://localhost:3000/api/qrcode?user_id=${user.name}&guest=Anna`)
+    const data = await fetch(`http://localhost:3000/api/qrcode?user=${userName}&crypto=${coins[index].name}&message=${input}`)
     const res = await data.json()
-    console.log("hello")
     console.log(res);
   }
 
@@ -52,24 +52,17 @@ function upload({users}) {
           <input className="m-2" type="file" />
           <form action="">
             <label>Title: </label>
-            <input className="border-2" 
-            type="text" 
-            pattern="[a-z]{0,9}"
-            title="Password should be digits (0 to 9) or alphabets (a to z)."
-            required />
+            <input value={input} onInput={e => setInput((e.target as HTMLInputElement).value)}/>
           </form>
 
           <div className="flex flex-row flex-wrap space-x-2">
             {users && users.map(user =>(
               <div>
-                <div onClick={() => { console.log("button clicked");}} className="cursor-pointer m-2 rounded-full p-1 bg-slate-500">{user._id}</div>
+                <div onClick={() => { console.log("button clicked");}} className="cursor-pointer m-2 rounded-full p-2 bg-slate-500">{user.name}</div>
               </div>
                 
             ))}
           </div>
-          
-
-
 
         </div>
       </main>
@@ -81,7 +74,7 @@ export default upload
 export async function getServerSideProps (context) {
   const client = await clientPromise
   const db = client.db('test')
-  db.collection('users').updateOne({ name: "Danny Ho"}, { $set: { QRcode: "www.im-url.com"}});
+  // db.collection('users').updateOne({ name: "Danny Ho"}, { $set: { QRcode: "www.im-url.com"}});
   const data = await db.collection('users').find({}).limit(10).toArray();
   const users = JSON.parse(JSON.stringify(data));
 

@@ -1,16 +1,33 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSession } from "next-auth/react"
 import Image from 'next/image'
 import NetworkBtn from './NetworkBtn'
 import DecimalDigits from './DecimalDigits'
 import DropdownMenu from './DropdownMenu'
 
-function Feed() {
+function Feed({images}) {
+  const { data: session } = useSession();
+  const userName = session?.user.name;
+
+  const [qrcode, setQrcode] = useState('');
+
+  const getQrcode = () => {
+    for (let i = 0; i < images.length; i++) {
+      if (images[i].user === session?.user.name && images[i].crypto === coins[index]?.name) {
+        setQrcode(images[i].message);
+      }
+    }
+  }
+
+  
+
   const [coins, setCoins] = useState([]);
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
   const [price, setPrice] = useState(0);
   const [priceChange, setPriceChange] = useState(0);
+  
 
   const [index, setIndex] = useState(0);    // 0 = bitcoin
 
@@ -33,6 +50,7 @@ function Feed() {
   useEffect(() => {
     fetchData();
     console.log("testing index:" + index);
+    getQrcode();
   }, [index])
 
   // update the coin information every 15 seconds
@@ -61,6 +79,7 @@ function Feed() {
 
         <div className=" items-center bg-gray-800 m-2 p-3 rounded-xl ">
             <p className='text-white'>Wallet Address</p>
+            <p className="text-white">{qrcode}</p>
             <div  className='flex mt-2 justify-center pb-10'>
               <Image src="/QRcode.png" alt="" width={250} height={250}/>
             </div>
