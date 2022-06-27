@@ -8,15 +8,16 @@ import DropdownMenu from './DropdownMenu'
 function Feed({images}) {
   const { data: session } = useSession();
   const userName = session?.user.name;
-
-  const [qrcode, setQrcode] = useState('');
+  const [qrcode, setQrcode] = useState('/QRcode.png');
 
   const getQrcode = () => {
     for (let i = 0; i < images.length; i++) {
-      if (images[i].user === session?.user.name && images[i].crypto === coins[index]?.name) {
-        setQrcode(images[i].message);
+      if (images[i].user === userName && images[i].crypto === coins[index]?.name) {
+        setQrcode(images[i].qrcode);
+        return;
       }
     }
+    // setQrcode("")
   }
 
   
@@ -79,9 +80,10 @@ function Feed({images}) {
 
         <div className=" items-center bg-gray-800 m-2 p-3 rounded-xl ">
             <p className='text-white'>Wallet Address</p>
-            <p className="text-white">{qrcode}</p>
+            {/* <p className="text-white">{qrcode}</p> */}
             <div  className='flex mt-2 justify-center pb-10'>
-              <Image src="/QRcode.png" alt="" width={250} height={250}/>
+              <img src={qrcode}/>
+              {/* <Image src={qrcode} width={250} height={250}/> */}
             </div>
         </div>
 

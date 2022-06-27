@@ -6,13 +6,11 @@ import Feed from '../components/Feed';
 import Menu from '../components/Menu';
 
 interface Props { 
-  users: []
-  images: []
+  users: {},
+  images: {}
 }
 
 const Home: NextPage<Props> = ({users, images}: Props) => {
-  console.log(users)
-  console.log(images)
   return (
     <div className="mx-auto bg-slate-100">
       <Head>
