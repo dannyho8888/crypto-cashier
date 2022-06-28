@@ -1,20 +1,23 @@
-import React, {useState, useEffect} from 'react'
-import DropdownMenu from '../components/DropdownMenu'
-import Menu from '../components/Menu'
-import clientPromise from '../lib/mongodb'
-import { useSession } from "next-auth/react"
-import FileBase64 from "react-file-base64"
-import Image from 'next/image'
+import React, {useState, useEffect} from 'react';
+import DropdownMenu from '../components/DropdownMenu';
+import Popup from '../components/Popup';
+import Menu from '../components/Menu';
+import clientPromise from '../lib/mongodb';
+import { useSession } from "next-auth/react";
+import FileBase64 from "react-file-base64";
+import Image from 'next/image';
 
 interface Props { 
   users: any,
   images: any
-}
+};
 
 
 function upload({users, images}: Props) {
   const { data: session } = useSession();
   const userName = session?.user.name;
+
+  const [popupBtn, setpopupBtn] = useState(false);
 
   const [input, setInput] = useState('');
   const [ qr, setQr] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
@@ -54,6 +57,7 @@ function upload({users, images}: Props) {
     for (let i = 0; i < images.length; i++) {
       if (images[i].user == userName && images[i].crypto == coins[index]?.name) {
         console.log('its already exist');
+        setpopupBtn(true)
         return;
       }
     }
@@ -69,11 +73,15 @@ function upload({users, images}: Props) {
         <Menu />
         <div className="col-span-10 lg:col-span-8">
           <DropdownMenu changeIndex={i => setIndex(i)} coins={coins} image={image} symbol={symbol} name={name}/>
-          <div onClick={() => checkIfExists()} className="text-xl bg-gray-800 flex m-2 py-2 pl-5 mb-0
+          <div className="text-xl bg-gray-800 flex m-2 py-2 pl-5 mb-0
               space-x-2 rounded-xl text-justify 
             hover:bg-gray-400 cursor-pointer text-white">
             Choose Network
           </div>
+          <Popup trigger={popupBtn} setTrigger={setpopupBtn}>
+            <div className="text-white">You have already upload the same QRcode for {name}</div>
+
+          </Popup>
 
         <div className="m-2 p-2">
         <FileBase64 
@@ -99,11 +107,12 @@ function upload({users, images}: Props) {
           </div>
 
           <p onClick={() => checkIfExists()}
-              className="text-xl bg-gray-800 flex m-2 py-2 mb-0
-              rounded-xl place-content-center font-bold
-              hover:bg-gray-400 cursor-pointer text-white">Submit</p>
-          
-
+            className="text-xl bg-gray-800 flex m-2 py-2 mb-0
+            rounded-xl place-content-center font-bold
+            hover:bg-gray-400 cursor-pointer text-white"
+          >
+            Submit
+          </p>
         </div>
       </main>
   )
