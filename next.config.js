@@ -4,6 +4,6 @@ module.exports = {
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: ['cryptologos.cc', 'assets.coingecko.com']
+    domains: ['cryptologos.cc', 'assets.coingecko.com', 'res.cloudinary.com', 'lh3.googleusercontent.com', 'pbs.twimg.com']
   }
 }

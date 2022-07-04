@@ -4,30 +4,28 @@ import Popup from '../components/Popup';
 import Menu from '../components/Menu';
 import clientPromise from '../lib/mongodb';
 import { useSession } from "next-auth/react";
-import FileBase64 from "react-file-base64";
 import Image from 'next/image';
+import { QrcodeIcon } from '@heroicons/react/outline';
 
 interface Props { 
   users: any,
   images: any
 };
 
-
 function upload({users, images}: Props) {
   const { data: session } = useSession();
   const userName = session?.user.name;
 
   const [popupBtn, setpopupBtn] = useState(false);
-
-  const [input, setInput] = useState('');
-  const [ qr, setQr] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
-
   const [coins, setCoins] = useState([]);
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
-
   const [index, setIndex] = useState(0);    // coins[0] = bitcoin
+  const [uploadData, setUploadData] = useState();
+  const [imgPreview, setImgPreview] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
+  const [imageSrc, setImageSrc] = useState('');
+
   const fetchData = async () => {
     try {
       const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
@@ -47,10 +45,10 @@ function upload({users, images}: Props) {
     console.log("testing index:" + index);
   }, [index])
 
-  const addQRcode = async (image) => {
-    const data = await fetch(`http://localhost:3000/api/qrcode?user=${userName}&crypto=${coins[index].name}&qrcode=${image}`)
-    const res = await data.json()
-    console.log(res);
+  const addQRcode = async (url) => {
+    const data = await fetch(`http://localhost:3000/api/qrcode?user=${userName}&crypto=${coins[index].name}&qrcode=${url}`)
+    // const res = await data.json()
+    console.log("uploaded to mongodb");
   }
 
   const checkIfExists = () => {
@@ -61,13 +59,49 @@ function upload({users, images}: Props) {
         return;
       }
     }
-    addQRcode(qr);
+    addQRcode();
   }
 
-  useEffect(() => {
-    console.log(qr);
-  }, [qr]);
-    
+  function handleOnChange(changeEvent) {
+    const reader = new FileReader();
+
+    reader.onload = function(onLoadEvent) {
+      setImgPreview(onLoadEvent.target.result);
+      setUploadData(undefined);
+    }
+
+    reader.readAsDataURL(changeEvent.target.files[0]);
+  }
+
+
+  async function handleOnSubmit(event) {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const fileInput = Array.from(form.elements).find(({ name }) => name === 'file');
+
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append('file', file);
+    }
+
+    formData.append('upload_preset', 'crypto-cashier');
+
+    const data = await fetch('https://api.cloudinary.com/v1_1/dfot970zi/image/upload', {
+      method: 'POST',
+      body: formData
+    }).then(r => r.json());
+
+    setImageSrc(data.secure_url);
+    setUploadData(data);
+    addQRcode(data.secure_url)
+  }
+
+  // useEffect(() => {
+  //   console.log(imageSrc)
+  // }, [imageSrc]);
+
   return (
     <main className="grid grid-cols-12 ">
         <Menu />
@@ -83,36 +117,34 @@ function upload({users, images}: Props) {
 
           </Popup>
 
-        <div className="m-2 p-2">
-        <FileBase64 
-            multiple={false}
-            onDone={ ({base64})=>setQr(base64) }
-          />
-        </div>
-
-          {/* <div className="flex flex-row flex-wrap space-x-2">
-            {users && users.map(user =>(
-              <div>
-                <div onClick={() => { console.log("button clicked");}} className="cursor-pointer m-2 rounded-full p-2 bg-slate-500">{user.name}</div>
-              </div>
-                
-            ))}
-          </div> */}
-          <div className="items-center bg-gray-800 m-2 p-3 rounded-xl ">
-            <p className='text-white'>Wallet Address</p>
-            <div  className='flex mt-2 justify-center pb-10'>
-              <Image src={qr} width={250} height={250}/>
-            </div>
+          <form className="m-2" method="post" onChange={handleOnChange} onSubmit={handleOnSubmit}>
+            <p>
+              <input type="file" name="file" />
+            </p>
             
-          </div>
-
-          <p onClick={() => checkIfExists()}
-            className="text-xl bg-gray-800 flex m-2 py-2 mb-0
+            <div className="items-center bg-gray-800 my-2 p-3 rounded-xl ">
+                <p className='text-white'>Wallet Address</p>
+                <div  className='flex justify-center my-2 pb-10'>
+                  <Image src={imgPreview} width={250} height={250} alt="nothing"/>
+                </div>
+            </div>
+          
+           
+            <p 
+            className="text-xl bg-gray-800 flex py-2 mb-0
             rounded-xl place-content-center font-bold
             hover:bg-gray-400 cursor-pointer text-white"
-          >
-            Submit
-          </p>
+            >
+              <button>
+                Upload QRcode
+              </button>
+            </p>
+    
+          </form>
+        
+          
+
+          
         </div>
       </main>
   )

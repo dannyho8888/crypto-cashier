@@ -8,6 +8,13 @@ import DropdownMenu from './DropdownMenu'
 function Feed({images}) {
   const { data: session } = useSession();
   const userName = session?.user.name;
+  const [coins, setCoins] = useState([]);
+  const [name, setName] = useState('');
+  const [symbol, setSymbol] = useState('');
+  const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
+  const [price, setPrice] = useState(0);
+  const [priceChange, setPriceChange] = useState(0);
+  const [index, setIndex] = useState(0);    // 0 = bitcoin
   const [qrcode, setQrcode] = useState('/QRcode.png');
 
   const getQrcode = () => {
@@ -17,20 +24,8 @@ function Feed({images}) {
         return;
       }
     }
-    // setQrcode("")
+    setQrcode("");
   }
-
-  
-
-  const [coins, setCoins] = useState([]);
-  const [name, setName] = useState('');
-  const [symbol, setSymbol] = useState('');
-  const [image, setImage] = useState('https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880');
-  const [price, setPrice] = useState(0);
-  const [priceChange, setPriceChange] = useState(0);
-  
-
-  const [index, setIndex] = useState(0);    // 0 = bitcoin
 
   const fetchData = async () => {
     try {
@@ -78,12 +73,15 @@ function Feed({images}) {
           <NetworkBtn title="Arbitrum One"/>
         </div>
 
-        <div className=" items-center bg-gray-800 m-2 p-3 rounded-xl ">
+        <div className=" items-center bg-gray-800 m-2 p-3 rounded-xl h-80 ">
             <p className='text-white'>Wallet Address</p>
-            {/* <p className="text-white">{qrcode}</p> */}
-            <div  className='flex mt-2 justify-center pb-10'>
-              <img src={qrcode}/>
-              {/* <Image src={qrcode} width={250} height={250}/> */}
+
+            <div  className='flex mt-2 align-center justify-center pb-10'>
+              {qrcode ? (
+                <Image src={qrcode} height={250} width={250}/>
+              ) : <h1 className="font-bold text-white">Please upload your QRcode</h1>
+            }
+              
             </div>
         </div>
 
@@ -93,7 +91,6 @@ function Feed({images}) {
           <p className='ml-auto'>${price}</p>
           <div className='bg-kuRedDiv text-kuRed mx-3 p-1 rounded-xl'>{priceChange}%</div>
         </div>
-        
         <div className='m-2 grid grid-cols-3 grid-flow-row gap-x-5 gap-y-3'>
           <DecimalDigits title="7"/>
           <DecimalDigits title="8"/>

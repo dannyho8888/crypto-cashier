@@ -19,7 +19,6 @@ function DropdownMenu(props) {
 				<div className=' flex space-x-2 items-baseline'>
 					<p className='text-xl text-gray-100 font-bold group-hover:text-gray-200'>{props.symbol}</p>
 					<p className='text-gray-400 group-hover:text-gray-300'>{props.name}</p>
-					<p className='text-white'>{index}</p>
 				</div>
 			</div>
 			<div style={{width: "calc(100% - 16px)"}} 
