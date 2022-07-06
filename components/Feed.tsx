@@ -66,7 +66,7 @@ function Feed({images}) {
 
   return (
     <div className="col-span-10 lg:col-span-8">
-        <div>hello world</div>
+        <div>hello world I am rama dev</div>
         <DropdownMenu changeIndex={i => setIndex(i)} coins={coins} image={image} symbol={symbol} name={name}/>
         <div className="flex mt-2 space-x-3 px-2 py-1 items-center text-xs">
           <NetworkBtn title="BSC(BEP20)"/>
