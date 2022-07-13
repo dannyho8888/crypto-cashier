@@ -15,7 +15,6 @@ const Home: NextPage<Props> = ({users, images}: Props) => {
     <div className="mx-auto bg-slate-100">
       <Head>
         <title>Crypto Cashier</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="grid grid-cols-12 ">

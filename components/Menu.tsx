@@ -21,19 +21,24 @@ function Menu() {
     return 0;
   }
 
+  
+
   return (
     <div className='flex flex-col col-span-2 items-center px-4 md:items-start'>
-      <div 
-      className='items-center px-4 py-3'
-      >
+      <div className='items-center px-4 py-3'>
         {userImage && (
           <Image className='rounded-full' src={userImage} width={40} height={40}/>
         )}
       </div>
       
-      
-      <MenuRow onClick={() => uploadUrl("http://localhost:3000")} Icon={HomeIcon} title='Home'/>
-      <MenuRow onClick={() => uploadUrl("http://localhost:3000/upload")} Icon={UploadIcon} title='Upload'/>
+      <MenuRow 
+        onClick={() => uploadUrl("http://localhost:3000")} 
+        Icon={HomeIcon} title='Home'
+      />
+      <MenuRow 
+        onClick={() => uploadUrl("http://localhost:3000/upload")} 
+        Icon={UploadIcon} title='Upload'
+      />
       <MenuRow Icon={AdjustmentsIcon} title='Adjust' />
       <MenuRow 
         onClick={ session ? signOut : signIn } 
