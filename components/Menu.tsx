@@ -28,7 +28,7 @@ function Menu() {
       <div className='items-center px-4 py-3'>
         {userImage && (
           <Image className='rounded-full' src={userImage} width={40} height={40}/>
-        )}
+          )}
       </div>
       
       <MenuRow 

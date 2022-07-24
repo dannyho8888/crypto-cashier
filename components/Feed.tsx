@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { useSession } from "next-auth/react"
 import Image from 'next/image'
 import NetworkBtn from './NetworkBtn'
@@ -51,18 +51,19 @@ function Feed({images}) {
 
   // update the coin information every 15 seconds
   useEffect(() => {
-    setInterval(async () => {
+    const intervalId = setInterval(async () => {
       try { 
         const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
         const data = await res.json();
         setPrice(data[index].current_price);
         setPriceChange(data[index].price_change_percentage_24h.toFixed(2));
-        console.log('fetch every 15s!!')
+        console.log('fetch every 15s! ' + data[index].symbol)
       }catch (e) {
         console.log("Error when fetching data")
       }
     }, 15000);
-  }, [])
+    return () => clearInterval(intervalId);
+  }, [index])
 
   return (
     <div className="col-span-10 lg:col-span-8">

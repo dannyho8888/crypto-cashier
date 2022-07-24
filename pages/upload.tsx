@@ -6,6 +6,7 @@ import clientPromise from '../lib/mongodb';
 import { useSession } from "next-auth/react";
 import Image from 'next/image';
 import { QrcodeIcon } from '@heroicons/react/outline';
+import FinishPopup from '../components/FinishPopup';
 
 interface Props { 
   users: any,
@@ -49,18 +50,19 @@ function upload({users, images}: Props) {
     const data = await fetch(`http://localhost:3000/api/qrcode?user=${userName}&crypto=${coins[index].name}&qrcode=${url}`)
     // const res = await data.json()
     console.log("uploaded to mongodb");
+    setpopupBtn(true);
   }
 
-  const checkIfExists = () => {
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].user == userName && images[i].crypto == coins[index]?.name) {
-        console.log('its already exist');
-        setpopupBtn(true)
-        return;
-      }
-    }
-    addQRcode();
-  }
+  // const checkIfExists = () => {
+  //   for (let i = 0; i < images.length; i++) {
+  //     if (images[i].user == userName && images[i].crypto == coins[index]?.name) {
+  //       console.log('its already exist');
+  //       setpopupBtn(true)
+  //       return;
+  //     }
+  //   }
+  //   addQRcode();
+  // }
 
   function handleOnChange(changeEvent) {
     const reader = new FileReader();
@@ -76,10 +78,8 @@ function upload({users, images}: Props) {
 
   async function handleOnSubmit(event) {
     event.preventDefault();
-
     const form = event.currentTarget;
     const fileInput = Array.from(form.elements).find(({ name }) => name === 'file');
-
     const formData = new FormData();
 
     for (const file of fileInput.files) {
@@ -93,6 +93,7 @@ function upload({users, images}: Props) {
       body: formData
     }).then(r => r.json());
 
+    console.log(data);
     setImageSrc(data.secure_url);
     setUploadData(data);
     addQRcode(data.secure_url)
@@ -112,16 +113,16 @@ function upload({users, images}: Props) {
             hover:bg-gray-400 cursor-pointer text-white">
             Choose Network
           </div>
-          <Popup trigger={popupBtn} setTrigger={setpopupBtn}>
+          {/* <Popup trigger={popupBtn} setTrigger={setpopupBtn}>
             <div className="text-white">You have already upload the same QRcode for {name}</div>
+          </Popup> */}
 
-          </Popup>
+          <FinishPopup trigger={popupBtn} setTrigger={setpopupBtn}>
+            <div className="text-white">{name} QRcode uploaded!</div>
+          </FinishPopup>          
 
           <form className="m-2" method="post" onChange={handleOnChange} onSubmit={handleOnSubmit}>
-            <p>
-              <input type="file" name="file" />
-            </p>
-            
+            <p><input type="file" name="file" /></p>
             <div className="items-center bg-gray-800 my-2 p-3 rounded-xl ">
                 <p className='text-white'>Wallet Address</p>
                 <div  className='flex justify-center my-2 pb-10'>
@@ -129,17 +130,15 @@ function upload({users, images}: Props) {
                 </div>
             </div>
           
-           
             <p 
-            className="text-xl bg-gray-800 flex py-2 mb-0
-            rounded-xl place-content-center font-bold
-            hover:bg-gray-400 cursor-pointer text-white"
+              className="text-xl bg-gray-800 flex py-2 mb-0
+              rounded-xl place-content-center font-bold
+              hover:bg-gray-400 cursor-pointer text-white"
             >
               <button>
                 Upload QRcode
               </button>
             </p>
-    
           </form>
         
           
