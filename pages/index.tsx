@@ -17,7 +17,7 @@ const Home: NextPage<Props> = ({users, images}: Props) => {
         <title>Crypto Cashier</title>
       </Head>
 
-      <main className="grid grid-cols-12 ">
+      <main className="grid grid-cols-12">
         <Menu />
         <Feed images={images}/>
       </main>
@@ -30,7 +30,6 @@ export default Home
 export async function getServerSideProps (context) {
   const client = await clientPromise
   const db = client.db('test')
-  // await db.collection('users').updateOne({ name: "Danny Ho"}, { $set: { QRcode: "www.image-url.com"}});
   let users = await db.collection('users').find({}).limit(1).toArray();
   let images = await db.collection('QRcode').find({}).toArray();
   users = JSON.parse(JSON.stringify(users));

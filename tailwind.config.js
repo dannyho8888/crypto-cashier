@@ -11,6 +11,8 @@ module.exports = {
         bybitBg: '#100f13',
         kuRed: "#DB716b",
         kuRedDiv: "#403040",
+        kuGreen: "#5CB897",
+        kuGreenDiv: "#2A4947"
       }
     }, 
   },

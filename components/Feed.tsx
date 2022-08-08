@@ -90,7 +90,12 @@ function Feed({images}) {
           <p className="font-bold">{symbol.toUpperCase()}</p>
           <p className="text-xs text-gray-400">/USDT</p>
           <p className='ml-auto'>${price}</p>
-          <div className='bg-kuRedDiv text-kuRed mx-3 p-1 rounded-xl'>{priceChange}%</div>
+          {priceChange >= 0 ?
+            <div className="bg-kuGreenDiv text-kuGreen mx-3 p-1 rounded-xl">{priceChange}%</div> :
+            <div className="bg-kuRedDiv text-kuRed mx-3 p-1 rounded-xl">{priceChange}%</div>
+          }
+          
+
         </div>
         <div className='m-2 grid grid-cols-3 grid-flow-row gap-x-5 gap-y-3'>
           <DecimalDigits title="7"/>

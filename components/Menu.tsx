@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import MenuRow from './MenuRow';
 import { useSession, signIn, signOut } from "next-auth/react";
-import Link from 'next/link';
 import Image from 'next/image';
 import { UserIcon, 
          HomeIcon, 
@@ -20,8 +19,6 @@ function Menu() {
     window.location.assign(url);
     return 0;
   }
-
-  
 
   return (
     <div className='flex flex-col col-span-2 items-center px-4 md:items-start'>
