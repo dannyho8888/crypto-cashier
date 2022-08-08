@@ -48,8 +48,9 @@ function upload({users, images}: Props) {
 
   const addQRcode = async (url) => {
     const data = await fetch(`http://localhost:3000/api/qrcode?user=${userName}&crypto=${coins[index].name}&qrcode=${url}`)
-    // const res = await data.json()
+    const res = await data.json()
     console.log("uploaded to mongodb");
+    console.log(url);
     setpopupBtn(true);
   }
 

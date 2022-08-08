@@ -19,6 +19,7 @@ function Feed({images}) {
 
   const getQrcode = () => {
     for (let i = 0; i < images.length; i++) {
+      console.log('inside getQRcode: ' + userName);
       if (images[i].user === userName && images[i].crypto === coins[index]?.name) {
         setQrcode(images[i].qrcode);
         return;
@@ -41,6 +42,12 @@ function Feed({images}) {
       console.log("Error when fetching data")
     }
   }
+
+  // update userName and coins[index].name when first rendering
+  useEffect(() => {
+    console.log(session);
+    getQrcode();
+  }, [userName, coins[index]?.name])
 
   // get coin information when first rendering the app
   useEffect(() => {
@@ -97,7 +104,7 @@ function Feed({images}) {
           
 
         </div>
-        <div className='m-2 grid grid-cols-3 grid-flow-row gap-x-5 gap-y-3'>
+        {/* <div className='m-2 grid grid-cols-3 grid-flow-row gap-x-5 gap-y-3'>
           <DecimalDigits title="7"/>
           <DecimalDigits title="8"/>
           <DecimalDigits title="9"/>
@@ -110,7 +117,7 @@ function Feed({images}) {
           <DecimalDigits title="0"/>
           <DecimalDigits title="00"/>
           <DecimalDigits title="."/>
-        </div>
+        </div> */}
     </div>
   )
 }
